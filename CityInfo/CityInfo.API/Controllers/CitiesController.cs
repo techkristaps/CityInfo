@@ -8,9 +8,9 @@ namespace CityInfo.API.Controllers
     public class CitiesController : ControllerBase
     {
         [HttpGet]
-        public JsonResult GetCities()
+        public ActionResult<IEnumerable<CityDto>> GetCities()
         {
-            return new JsonResult(CitiesDataStore.Current.Cities);
+            return Ok(CitiesDataStore.Current.Cities);
         }
 
         [HttpGet("{id}")]
@@ -19,7 +19,12 @@ namespace CityInfo.API.Controllers
             // find city
             var cityToReturn = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == id);
 
+            if (cityToReturn == null)
+            {
+                return NotFound();
+            }
+
             return Ok(cityToReturn);
         }
     }
-} 
+}

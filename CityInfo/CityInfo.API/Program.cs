@@ -1,12 +1,24 @@
+using Microsoft.AspNetCore.StaticFiles;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // this returns not acceptable when requesting xml instead of json
+    options.ReturnHttpNotAcceptable = true;    
+}).AddNewtonsoftJson()
+// to return xml we add the AddXmlDataContractSerializerFormatters()
+.AddXmlDataContractSerializerFormatters();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// for file content types
+builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
 var app = builder.Build();
 
